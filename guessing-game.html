@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        background-color: #1bb295;
+        font-family: Arial;
+      }
+      .guessContainer {
+        background-color: white;
+        width: 600px;
+        height: 500px;
+        border: none;
+        border-radius: 6px;
+        position: absolute;
+        top: 15%;
+        left: 32%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+
+      }
+      .header-container p{
+        font-size: 20px;
+        font-weight: bold;
+        text-align: center;
+      }
+      .header-container{
+        padding: 10px 0;
+        width: 100%;
+        border-bottom: 1px solid rgb(194, 193, 193);
+      }
+      .inputContainer {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      input {
+        width: 50px;
+        height: 50px;
+        margin: 2px;
+        background: none;
+        border-radius: 6px;
+        font-size: 24px;
+        text-align: center;
+        color: #1bb295;
+        font-weight: 500;
+      }
+      #resetBtn {
+        background-color:#1bb295;
+        color: white;
+        font-size: 12px;
+        font-weight: 500;
+        border: none;
+        border-radius: 6px;
+        padding: 15px;
+        width: 90%;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        align-items: center;
+        margin-left: 29px;
+      }
+      #resetBtn:hover {
+        transform: scale(0.9);
+      }
+      .details p {
+        font-size: 14px;
+        margin-left: 29px;
+        font-weight: 500;
+        margin-bottom: 10px;
+      }
+      .typing-input {
+        z-index: -999;
+        opacity: 0;
+        position: absolute;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="guessContainer">
+      <div class="header-container">
+        <p>Guess the Album</p>
+      </div>
+      <input type="text" class="typing-input" maxlength="1">
+      <div class="inputContainer">
+
+      </div>
+      <div class="details">
+        <p >Hint: <span id="hint"></span></p>
+        <p >Remaining guesses: <span id="guesses"></span> </p>
+        <p >Wrong letters: <span id="letter"></span></p>
+      </div>
+      <button id="resetBtn">Reset Game</button>
+    </div>
+    <script>
+      const wordList = [
+        {
+          album: "Graduation",
+          hint: "This album won against the 'Get Rich Or Die Trying Album' in terms of popularity and record sales"
+        },
+        {
+          album: "goodkidmAAdcity",
+          hint: "The album is about a good kid being influenced by peer pressure in a mad city of Compton"
+        },
+        {
+          album: "Donda",
+          hint: "The album is named after Kanye West's late mother"
+        },
+        {
+          album: "KIDS SEE GHOSTS",
+          hint: "This is a Kanye West album named after children who see ghosts"
+        }
+      ];
+      const inputs = document.querySelector(".inputContainer");
+      const resetBtn = document.querySelector("#resetBtn");
+      const hint = document.querySelector("#hint");
+      const typingInput = document.querySelector(".typing-input");
+      const wrongLetters = document.querySelector("#letter");
+      const guessLeft = document.querySelector("#guesses");
+      let word, maxGuesses, corrects = [], incorrects = [];
+
+
+      function randomWord() {
+        //getting random object from wordList
+        let ranObj = wordList[Math.floor(Math.random() * wordList.length)];
+        word = ranObj.album //getting word of random object
+        maxGuesses = 8; corrects = []; incorrects = [];
+        console.log(ranObj);
+
+        hint.innerText = ranObj.hint;
+        guessLeft.innerText = maxGuesses;
+        wrongLetters.innerText = incorrects;
+
+        let html = "";
+        for(let i = 0; i < word.length; i++) {
+          html += `<input type="text" disabled>`;
+        }
+        inputs.innerHTML = html;
+      }
+      randomWord();
+
+      function initGame(e) {
+        let key = e.target.value;
+        if(key.match(/^[A-Za-z]+$/) && !incorrects.includes(` ${key}`) && !corrects.includes(key)) {
+          console.log(key);
+
+          if(word.includes(key)) { //if user letter found in the word
+            console.log("letter found!");
+            for(let i = 0; i < word.length; i++) {
+              if(word[i] === key) {
+                corrects.push(key);
+                inputs.querySelectorAll("input")[i].value = key;
+              }
+            }
+          } else {
+            maxGuesses--; //decrement maxGuesses by 1
+            incorrects.push(` ${key}`);
+          }
+          guessLeft.innerText = maxGuesses;
+          wrongLetters.innerHTML = incorrects;
+        }
+        typingInput.value = "";
+
+        setTimeout(() => {
+          if(corrects.length === word.length) {
+          alert(`Congrats! you found the album ${word.toUpperCase()}`);
+          randomWord(); //calling randomWoed function, so the game reset
+        } else if(maxGuesses < 1) { //if user couldn't find all letters
+        alert("Game over! you don't have any remaining guesses");
+        for(let i = 0; i < word.length; i++) {
+
+          inputs.querySelectorAll("input")[i].value = word[i];
+          }
+            }
+        })
+        }
+      
+
+      resetBtn.addEventListener("click", randomWord);
+      typingInput.addEventListener("input", initGame);
+      inputs.addEventListener("click", () => typingInput.focus());
+      document.addEventListener("keydown", () => typingInput.focus());
+    </script>
+  </body>
+</html>

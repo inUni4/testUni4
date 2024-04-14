@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      *{
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: Arial;
+        background-color: #1bb295;
+      }
+      .gameContainer{
+        background-color: white;
+        width: 600px;
+        height: 600px;
+        border: none;
+        border-radius: 6px;
+        position: absolute;
+        top: 10%;
+        left: 32%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        align-items: center;
+      }
+      .gameContainer h1{
+        font-size: 23px;
+        font-weight: bold;
+        text-align: center;
+      }
+      input {
+        width: 50px;
+        height: 50px;
+        background-color: none;
+        border-radius: 6px;
+        font-size: 25px;
+        text-align: center;
+        font-weight: bold;
+        color: #1bb295;
+        margin: 2px;
+      }
+      #inputContainer {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+      .details p{
+        font-size: 14px;
+        font-weight: 500;
+        margin-bottom: 10px;
+      }
+      #restartBtn {
+        background-color: #1bb295;
+        color: white;
+        border: none;
+        font-size: 12px;
+        border-radius: 6px;
+        font-weight: bold;
+        padding: 10px 0;
+        width: 90%;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+      #restartBtn:hover {
+        transform: scale(0.9);
+      }
+      .header-container {
+        padding: 10px;
+        width: 70%;
+        border-bottom: 1px solid rgb(192, 192, 192);
+        align-items: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="gameContainer">
+      <div class="header-container">
+        <h1>Guess the Album</h1>
+      </div>
+      <div id="inputContainer">
+      </div>
+      <div class="details">
+        <p>Hint: <span id="hint"></span></p>
+        <p>Remaining guesses: <span id="guess"></span></p>
+        <p>Wrong letters: <span id="letters"></span></p>
+      </div>
+      <button id="restartBtn">Play Again</button>
+    </div>
+    <script>
+      const wordList = [
+        {
+          album: "Donda",
+          hint: "This album is named after Kanye West's late mother."
+        },
+        {
+          album: "Graduation",
+          hint: "This is the most loved album by Kanye West fans."
+        },
+        {
+          album: "KanyeWest",
+          hint: "Who is the Goat? Note!!! this isn't an album."
+        }
+      ];
+      const hint = document.querySelector("#hint");
+      const inputText = document.querySelector("#inputContainer");
+      const remainingGuesses = document.querySelector("#guess");
+
+      function randomWord() {
+        let ranObj = wordList[Math.floor(Math.random() * wordList.length)];
+        let word = ranObj.album;
+        console.log(ranObj);
+
+        for(let i = 0; i < word.length; i++) {
+          hint.innerHTML = ranObj.hint;
+          inputText.innerHTML += `<input type="text" disabled>`;
+        }
+      }
+      randomWord();
+    </script>
+  </body>
+</html>
